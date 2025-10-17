@@ -1,0 +1,273 @@
+/* --- Root Variables for Branding --- */
+:root {
+    --navy-blue: #0a192f;
+    --electric-green: #64ffda;
+    --cyan: #00c6ff;
+    --light-slate: #ccd6f6;
+    --slate: #8892b0;
+    --card-bg: #112240;
+    --font-sans: 'Inter', sans-serif;
+}
+
+/* --- Base & Reset Styles --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--navy-blue);
+    font-family: var(--font-sans);
+    color: var(--slate);
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- Header & Tagline --- */
+.site-header {
+    padding: 30px 0;
+    text-align: center;
+    border-bottom: 1px solid var(--card-bg);
+}
+
+.logo {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--light-slate);
+    letter-spacing: -1px;
+}
+
+.logo::after {
+    content: '.';
+    color: var(--electric-green);
+}
+
+.tagline {
+    font-size: 1.1rem;
+    color: var(--slate);
+    margin-top: 10px;
+}
+
+.tagline strong {
+    color: var(--electric-green);
+    font-weight: 700;
+}
+
+/* --- Search Bar --- */
+.search-container {
+    margin: 30px 0;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--slate);
+    border-radius: 8px;
+    color: var(--light-slate);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#searchInput::placeholder {
+    color: var(--slate);
+}
+
+#searchInput:focus {
+    border-color: var(--electric-green);
+    box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.3);
+}
+
+/* --- Service Catalog & Cards --- */
+#service-catalog {
+    padding-bottom: 120px; /* Space for sticky CTA */
+}
+
+.category-title {
+    font-size: 1.8rem;
+    color: var(--light-slate);
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--electric-green);
+    display: inline-block;
+}
+
+.service-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr; /* Mobile-first: 1 column */
+}
+
+.service-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid transparent;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--cyan);
+}
+
+.service-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.service-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--light-slate);
+    margin-right: 15px;
+}
+
+.service-name .service-id {
+    font-size: 0.8rem;
+    color: var(--slate);
+    font-weight: 400;
+    display: block;
+    margin-top: 4px;
+}
+
+.service-icon {
+    font-size: 2rem;
+}
+
+.refill-badge {
+    background-color: rgba(100, 255, 218, 0.1);
+    color: var(--electric-green);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 20px;
+    align-self: flex-start;
+}
+
+.price-container {
+    text-align: right;
+    margin-top: auto; /* Pushes price to the bottom */
+}
+
+.price-bdt {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--electric-green);
+    line-height: 1.2;
+}
+
+.price-bdt span {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--slate);
+    display: block;
+}
+
+.price-usd {
+    font-size: 0.85rem;
+    color: var(--slate);
+    margin-top: 5px;
+}
+
+/* --- Sticky CTA Button --- */
+.whatsapp-cta {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--electric-green);
+    color: var(--navy-blue);
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-decoration: none;
+    z-index: 100;
+    border-top: 1px solid var(--navy-blue);
+    transition: background-color 0.3s ease;
+}
+
+.whatsapp-cta:hover {
+    background-color: var(--cyan);
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 0.9rem;
+    color: var(--slate);
+}
+
+/* --- Loader & Error Message --- */
+.loader {
+    border: 5px solid var(--card-bg);
+    border-top: 5px solid var(--electric-green);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 50px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    text-align: center;
+    color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ff6b6b;
+}
+
+/* --- Media Queries for Responsiveness --- */
+
+/* Tablet */
+@media (min-width: 768px) {
+    .service-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .logo {
+        font-size: 3rem;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .service-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .whatsapp-cta {
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        border-radius: 8px 8px 0 0;
+        bottom: 0;
+        padding: 15px 30px;
+    }
+}
