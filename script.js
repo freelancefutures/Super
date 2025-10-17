@@ -1,136 +1,110 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- Configuration ---
-    const API_URL = 'https://goupsocial.com/api/v2?key=6b3f733fa9160b31ca4010b574245dc7&action=services';
     const BDT_EXCHANGE_RATE = 118;
     const WHATSAPP_NUMBER = '8801700000000'; // IMPORTANT: Replace with your BD WhatsApp number
 
-    // --- Failsafe Data (Hardcoded Backup) ---
-    const failsafeServices = [
-        { service: 101, name: "Facebook Page Followers [High Quality]", category: "Facebook", rate: "2.50", refill: true },
-        { service: 102, name: "Instagram Followers [Real Active]", category: "Instagram", rate: "3.10", refill: true },
-        { service: 103, name: "YouTube Watch Time Hours [4000 Hours]", category: "YouTube", rate: "8.00", refill: false },
-        { service: 104, name: "TikTok Video Likes [Instant]", category: "TikTok", rate: "1.20", refill: false },
-        { service: 105, name: "Telegram Channel Members", category: "Telegram", rate: "1.80", refill: true }
+    // --- V3.0 STATIC DATA SOURCE ---
+    const staticServiceData = [
+        {
+            service_id: 201,
+            name: '1000 Facebook Followers',
+            category: 'Facebook',
+            rate_usd: 2.35,
+            is_refill: true,
+            description: 'High-quality followers to boost your page credibility. 30-day automatic refill guarantee.'
+        },
+        {
+            service_id: 305,
+            name: '1000 Instagram Likes',
+            category: 'Instagram',
+            rate_usd: 0.3076,
+            is_refill: false,
+            description: 'Instant delivery likes from premium accounts to increase post engagement. Perfect for trending.'
+        },
+        {
+            service_id: 410,
+            name: '1000 YouTube Views',
+            category: 'YouTube',
+            rate_usd: 1.50,
+            is_refill: true,
+            description: 'Real human views to improve video ranking. Lifetime guarantee against drops.'
+        },
+        {
+            service_id: 515,
+            name: '4000 YouTube Watch Hours',
+            category: 'Top Deals',
+            rate_usd: 8.00,
+            is_refill: true,
+            description: 'The complete monetization package. Guaranteed delivery to meet YouTube Partner Program requirements.'
+        },
+        {
+            service_id: 620,
+            name: '1000 TikTok Followers',
+            category: 'TikTok',
+            rate_usd: 0.95,
+            is_refill: true,
+            description: 'Grow your TikTok presence with real followers. Fast, safe, and reliable service.'
+        }
     ];
 
     // --- DOM Elements ---
     const catalogContainer = document.getElementById('service-catalog');
     const filterContainer = document.getElementById('category-filters');
-    let allServicesData = []; // To store data from API or failsafe
+    const searchInput = document.getElementById('searchInput');
 
     /**
-     * Maps service categories to SVG icons.
-     * @param {string} category - The category name.
-     * @returns {string} An SVG icon string.
+     * Renders the category filter tabs based on the available data.
      */
-    const getServiceIcon = (category) => {
-        const catLower = category.toLowerCase();
-        const icons = {
-            facebook: `<svg fill="#64ffda" ...>...</svg>`, // Replace with actual SVG code
-            instagram: `<svg fill="#64ffda" ...>...</svg>`,
-            youtube: `<svg fill="#64ffda" ...>...</svg>`,
-            tiktok: `<svg fill="#64ffda" ...>...</svg>`,
-            telegram: `<svg fill="#64ffda" ...>...</svg>`
-        };
-        // Simple text-based fallback
-        const textIcons = {
-            facebook: 'FB', instagram: 'IG', youtube: 'YT', tiktok: 'TT', telegram: 'TG'
-        };
-        for (const key in textIcons) {
-            if (catLower.includes(key)) return `<div class="icon-fallback">${textIcons[key]}</div>`;
-        }
-        return `<div class="icon-fallback">⭐</div>`;
-    };
-
-    /**
-     * Primary function to orchestrate data fetching and rendering.
-     */
-    const initializeShowroom = async () => {
-        try {
-            const response = await fetch(API_URL);
-            if (!response.ok) throw new Error('API response was not ok.');
-            const services = await response.json();
-            allServicesData = services.filter(s => s.name && parseFloat(s.rate) > 0);
-            console.log("Successfully fetched live API data.");
-        } catch (error) {
-            console.warn("API fetch failed. Switching to failsafe data.", error);
-            allServicesData = failsafeServices; // Failsafe mechanism activated
-        }
-        renderPage(allServicesData);
-    };
-
-    /**
-     * Renders the entire page content (filters and cards).
-     * @param {Array} services - The array of service objects to display.
-     */
-    const renderPage = (services) => {
-        if (!services || services.length === 0) {
-            catalogContainer.innerHTML = `<p class="error-message">No services available to display.</p>`;
-            return;
-        }
-        renderCategoryFilters(services);
-        renderServiceCards(services);
-    };
-
-    /**
-     * Creates and displays the category filter tabs.
-     * @param {Array} services - The array of service objects.
-     */
-    const renderCategoryFilters = (services) => {
-        const categories = ['All', ...new Set(services.map(s => s.category))];
-        filterContainer.innerHTML = categories.map(category => 
+    const renderCategoryFilters = () => {
+        const categories = ['All', ...new Set(staticServiceData.map(s => s.category))];
+        filterContainer.innerHTML = categories.map(category =>
             `<button class="filter-tab ${category === 'All' ? 'active' : ''}" data-category="${category}">
                 ${category}
             </button>`
         ).join('');
-        
-        // Add event listeners to new tabs
+
         filterContainer.querySelectorAll('.filter-tab').forEach(tab => {
             tab.addEventListener('click', handleFilterClick);
         });
     };
-    
+
     /**
-     * Renders the service cards into the catalog.
+     * Renders service cards to the DOM based on the provided data array.
      * @param {Array} services - The array of service objects to render.
      */
     const renderServiceCards = (services) => {
-        catalogContainer.innerHTML = ''; // Clear loading state or old cards
-        const grid = document.createElement('div');
-        grid.className = 'service-grid';
-
-        if(services.length === 0) {
-            catalogContainer.innerHTML = '<p class="info-text">No services found in this category.</p>';
+        catalogContainer.innerHTML = ''; // Clear previous content
+        if (services.length === 0) {
+            catalogContainer.innerHTML = `<p>No services match your criteria.</p>`;
             return;
         }
 
         services.forEach(service => {
-            const bdtPrice = (parseFloat(service.rate) * BDT_EXCHANGE_RATE).toFixed(2);
-            
+            const bdtPrice = (service.rate_usd * BDT_EXCHANGE_RATE).toFixed(2);
             const card = document.createElement('div');
             card.className = 'service-card';
             card.innerHTML = `
-                <div class="card-header">
-                    <div class="service-icon">${getServiceIcon(service.category)}</div>
-                    <div class="service-name">${service.name}</div>
+                <div>
+                    <div class="card-header">
+                        <span class="service-name">${service.name}</span>
+                        ${service.is_refill ? '<span class="refill-badge">✓ Refill</span>' : ''}
+                    </div>
+                    <p class="service-description">${service.description}</p>
                 </div>
-                <div class="card-body">
+                <div>
                     <div class="price-line">
                         <div class="price-bdt">৳${bdtPrice}</div>
-                        <div class="price-badge">Lowest Cost!</div>
                     </div>
-                    <p class="price-info">per 1000 | ($${service.rate} USD)</p>
-                    <button class="message-btn" data-service-name="${service.name}" data-service-id="${service.service}">
+                    <p class="price-info">per 1000 | ($${service.rate_usd} USD)</p>
+                    <button class="message-btn" data-service-name="${service.name}" data-service-id="${service.service_id}">
                         Message Now
                     </button>
                 </div>
             `;
-            grid.appendChild(card);
+            catalogContainer.appendChild(card);
         });
-        catalogContainer.appendChild(grid);
-
-        // Add event listeners to new buttons
+        
         catalogContainer.querySelectorAll('.message-btn').forEach(btn => {
             btn.addEventListener('click', handleMessageNowClick);
         });
@@ -138,41 +112,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Handles clicks on the category filter tabs.
-     * @param {Event} event - The click event.
      */
     const handleFilterClick = (event) => {
         const category = event.target.dataset.category;
-        
-        // Update active tab style
         filterContainer.querySelector('.active').classList.remove('active');
         event.target.classList.add('active');
-
-        const filteredServices = category === 'All' 
-            ? allServicesData 
-            : allServicesData.filter(s => s.category === category);
         
-        renderServiceCards(filteredServices);
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        filterAndSearch(category, searchTerm);
+    };
+    
+    /**
+     * Handles the live search input.
+     */
+    const handleSearch = () => {
+        const activeCategory = filterContainer.querySelector('.active').dataset.category;
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        filterAndSearch(activeCategory, searchTerm);
     };
 
     /**
+     * Filters and searches the static data, then renders the results.
+     * @param {string} category - The selected category ('All' or specific).
+     * @param {string} searchTerm - The text from the search input.
+     */
+    const filterAndSearch = (category, searchTerm) => {
+        let filteredServices = staticServiceData;
+
+        // Apply category filter
+        if (category !== 'All') {
+            filteredServices = filteredServices.filter(s => s.category === category);
+        }
+
+        // Apply search filter
+        if (searchTerm) {
+            filteredServices = filteredServices.filter(s => 
+                s.name.toLowerCase().includes(searchTerm) ||
+                s.description.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        renderServiceCards(filteredServices);
+    };
+    
+    /**
      * Handles clicks on the "Message Now" button.
-     * @param {Event} event - The click event.
      */
     const handleMessageNowClick = (event) => {
         const button = event.target;
         const serviceName = button.dataset.serviceName;
         const serviceId = button.dataset.serviceId;
-        const message = `Hello Quick Grow BD, I'm interested in this service:\n\n*Service Name:* ${serviceName}\n*Service ID:* ${serviceId}\n\nPlease provide more details.`;
+        const message = `Hello Quick Grow BD,\nI'm interested in this service:\n\n*Service:* ${serviceName}\n*ID:* ${serviceId}\n\nPlease provide details.`;
 
-        // 1. Copy to clipboard
-        navigator.clipboard.writeText(serviceName).then(() => {
-            button.textContent = 'Copied!';
-            setTimeout(() => { button.textContent = 'Message Now'; }, 2000);
-        }).catch(err => console.error('Failed to copy text: ', err));
-
-        // 2. Open WhatsApp
+        button.textContent = 'Copied!';
+        setTimeout(() => { button.textContent = 'Message Now'; }, 2000);
+        
         const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
+    };
+
+    /**
+     * Initializes the page on load.
+     */
+    const initializeShowroom = () => {
+        renderCategoryFilters();
+        renderServiceCards(staticServiceData);
+        searchInput.addEventListener('input', handleSearch);
     };
 
     // --- Initial Load ---
