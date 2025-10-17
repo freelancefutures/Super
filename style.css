@@ -35,7 +35,7 @@ body {
     padding: 0 20px;
 }
 
-/* --- Header & Tagline --- */
+/* --- Header --- */
 .site-header {
     padding: 30px 0;
     text-align: center;
@@ -63,24 +63,43 @@ body {
     color: var(--electric-green);
 }
 
-/* --- Category Filter Tabs --- */
-.filter-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE 10+ */
-    padding: 20px 0;
+/* --- Search & Filter Controls --- */
+.controls-container {
+    padding: 30px 0 20px;
 }
-.filter-container::-webkit-scrollbar { 
-    display: none; /* Safari and Chrome */
+
+.search-wrapper {
+    margin-bottom: 20px;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 15px;
+    font-size: 1rem;
+    background-color: var(--card-bg);
+    border: 1px solid #1d2f50;
+    border-radius: 8px;
+    color: var(--light-slate);
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#searchInput::placeholder { color: var(--slate); }
+
+#searchInput:focus {
+    border-color: var(--electric-green);
+    box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2);
 }
 
 .filter-tabs {
     display: flex;
-    flex-wrap: nowrap;
     gap: 10px;
+    overflow-x: auto;
     padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
 }
+.filter-tabs::-webkit-scrollbar { display: none; }
 
 .filter-tab {
     white-space: nowrap;
@@ -95,43 +114,19 @@ body {
     transition: all 0.3s ease;
 }
 
-.filter-tab:hover {
-    color: var(--electric-green);
-    border-color: var(--electric-green);
-}
+.filter-tab:hover { color: var(--electric-green); }
 
 .filter-tab.active {
     background-color: var(--electric-green);
     color: var(--navy-blue);
-    border-color: var(--electric-green);
 }
 
-
-/* --- Loading State --- */
-.loading-state {
-    text-align: center;
-    padding: 80px 0;
-}
-.pulsing-text {
-    font-size: 1.2rem;
-    color: var(--slate);
-    animation: pulse 1.5s infinite ease-in-out;
-}
-@keyframes pulse {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
-}
-
-/* --- Service Catalog & Upgraded Cards --- */
-#service-catalog {
-    padding-bottom: 50px;
-}
-
+/* --- Service Catalog & Cards --- */
 .service-grid {
     display: grid;
     gap: 20px;
     grid-template-columns: 1fr; /* Mobile-first */
+    padding-bottom: 50px;
 }
 
 .service-card {
@@ -141,6 +136,7 @@ body {
     border: 1px solid #1d2f50;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -151,31 +147,39 @@ body {
 
 .card-header {
     display: flex;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
     gap: 15px;
-    margin-bottom: 20px;
-}
-
-.service-icon {
-    width: 40px;
-    height: 40px;
+    margin-bottom: 15px;
 }
 
 .service-name {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--light-slate);
 }
 
-.card-body {
-    margin-top: auto; /* Pushes content to bottom */
+.refill-badge {
+    background-color: rgba(100, 255, 218, 0.1);
+    color: var(--electric-green);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.service-description {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    flex-grow: 1; /* Allows description to take available space */
 }
 
 .price-line {
     display: flex;
     align-items: baseline;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .price-bdt {
@@ -185,25 +189,16 @@ body {
     line-height: 1;
 }
 
-.price-badge {
-    background-color: var(--cyan);
-    color: var(--navy-blue);
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 5px;
-    text-transform: uppercase;
-}
-
 .price-info {
     font-size: 0.9rem;
     color: var(--slate);
+    margin-bottom: 20px;
 }
 
 .message-btn {
     width: 100%;
     padding: 15px;
-    background-color: var(--electric-green);
+    background-color: var(--cyan);
     color: var(--navy-blue);
     border: none;
     border-radius: 6px;
@@ -215,7 +210,7 @@ body {
 }
 
 .message-btn:hover {
-    background-color: var(--cyan);
+    background-color: var(--electric-green);
 }
 
 /* --- Footer --- */
@@ -229,9 +224,6 @@ footer {
 @media (min-width: 768px) {
     .service-grid {
         grid-template-columns: repeat(2, 1fr);
-    }
-    .logo {
-        font-size: 2.8rem;
     }
 }
 
